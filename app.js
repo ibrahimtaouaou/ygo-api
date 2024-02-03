@@ -14,7 +14,7 @@ import {
 // id : 18318842
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 let cardInfo;
 
 function getType(cardInfo) {
@@ -30,9 +30,7 @@ function getType(cardInfo) {
 }
 
 // Middleware
-app
-  .use(morgan("dev")) // Logs for the API in the console
-  .use(bodyParser.json()); // Parses the strings from http to JSON
+app.use(bodyParser.json()); // Parses the strings from http to JSON
 
 const cardsInfoRef = dbRef(db, `ygo/`);
 const data = await get(cardsInfoRef);
