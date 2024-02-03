@@ -22,8 +22,8 @@ api.use("/api", homeRouter);
 api.use(bodyParser.json());
 // api.use(bodyParser.json()).use("/.netlify/functions/api", router);
 
-api.listen(port, () =>
-  console.log(`Notre apili Node est démarré sur : http://localhost:${port}`)
-);
+// api.listen(port, () =>
+//   console.log(`Notre apili Node est démarré sur : http://localhost:${port}`)
+// );
 
 export const handler = serverless(api);
