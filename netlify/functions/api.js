@@ -17,13 +17,13 @@ const port = process.env.PORT || 3000;
 // });
 
 // Middleware
-api.use("/cards", cardsRouter);
-api.use("/.netlify/functions/api", homeRouter);
+api.use("/api/cards", cardsRouter);
+api.use("/api", homeRouter);
 api.use(bodyParser.json());
 // api.use(bodyParser.json()).use("/.netlify/functions/api", router);
 
-// api.listen(port, () =>
-//   console.log(`Notre apili Node est démarré sur : http://localhost:${port}`)
-// );
+api.listen(port, () =>
+  console.log(`Notre apili Node est démarré sur : http://localhost:${port}`)
+);
 
 export const handler = serverless(api);
