@@ -5,8 +5,8 @@
   "main": "./functions/app.js",
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app.js",
-    "dev": "cross-env NODE_ENV=development nodemon app.js",
+    "start": "cross-env NODE_ENV=production node api.js",
+    "dev": "cross-env NODE_ENV=development nodemon api.js",
     "build": "netlify deploy --prod"
   },
   "author": "",
