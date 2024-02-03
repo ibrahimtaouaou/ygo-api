@@ -1,15 +1,14 @@
 import express from "express";
-import { success } from "./helper.js";
-import bodyParser from "body-parser";
-import { db, storage } from "./config.js";
-import { ref as dbRef, get } from "@firebase/database";
 import { ref as storageRef, getDownloadURL } from "firebase/storage";
+import { ref as dbRef, get } from "@firebase/database";
+import { storage, db } from "../config.js";
+import { success } from "../helper.js";
+import NodeCache from "node-cache";
 
-// id : 18318842
+export const router = express.Router();
 
-const app = express();
-const port = process.env.PORT || 3000;
-let cardInfo;
+const cardsInfoRef = dbRef(db, `ygo/`);
+const cardInfoCache = new NodeCache({ stdTTL: 600 });
 
 function getType(cardInfo) {
   return cardInfo.frameType === "spell"
@@ -23,32 +22,25 @@ function getType(cardInfo) {
     : "monster";
 }
 
-// Middleware
-app.use(bodyParser.json()); // Parses the strings from http to JSON
-
-const cardsInfoRef = dbRef(db, `ygo/`);
-const data = await get(cardsInfoRef);
-
 async function getCardImage(id, type) {
-  // const data = await getDocs;
   const cardsImageRef = storageRef(storage, `${type}/${id}.jpg`);
   const url = await getDownloadURL(cardsImageRef);
   return url;
 }
 
-app.get("/", (req, res) => {
-  res.json("Hello 😊");
-});
-
-app.get("/api/cards/id/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
+    let data;
+    if (cardInfoCache.has("data")) data = cardInfoCache.get("data");
+    else {
+      data = await get(cardsInfoRef);
+      cardInfoCache.set("data", data);
+    }
+
     const id = +req.params.id;
-    cardInfo = data.val().find((card) => card.id === id);
+    const cardInfo = data.val().find((card) => card.id === id);
 
     const type = getType(cardInfo);
-    //   const cardsImageRef = storageRef(storage, `${type}/${id}`);
-    //   console.log(cardInfo);
-    //   res.json(success("message", `cardInfo : ${cardInfo.name}`));
 
     const cardImageURL = await getCardImage(id, type);
     const selectedCard = { ...cardInfo, imageUrlStorage: cardImageURL };
@@ -58,7 +50,3 @@ app.get("/api/cards/id/:id", async (req, res) => {
     console.error(err);
   }
 });
-
-app.listen(port, () =>
-  console.log(`Notre appli Node est démarré sur : http://localhost:${port}`)
-);
