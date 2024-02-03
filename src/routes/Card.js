@@ -1,11 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import { ref as storageRef, getDownloadURL } from "firebase/storage";
 import { ref as dbRef, get } from "@firebase/database";
 import { storage, db } from "../config.js";
 import { success } from "../helper.js";
 import NodeCache from "node-cache";
 
-export const router = express.Router();
+export const router = Router();
 
 const cardsInfoRef = dbRef(db, `ygo/`);
 const cardInfoCache = new NodeCache({ stdTTL: 600 });

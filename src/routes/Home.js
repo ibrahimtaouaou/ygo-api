@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 
-export const router = express.Router();
+export const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/api", (req, res) => {
   res.json("Hello 😊");
 });
