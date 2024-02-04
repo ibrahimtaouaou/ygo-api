@@ -1,7 +1,7 @@
 import express from "express";
 import serverless from "serverless-http";
 import bodyParser from "body-parser";
-import { cors } from "cors";
+import cors from "cors";
 
 import { router as cardsRouter } from "../../src/routes/Card.js";
 import { router as homeRouter } from "../../src/routes/Home.js";
