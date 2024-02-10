@@ -13,6 +13,10 @@ const api = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
+api.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 api.use(bodyParser.json());
 api.use(cors());
 api.use("/api/cards", cardsRouter);
