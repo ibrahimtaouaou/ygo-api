@@ -1,10 +1,10 @@
 [build]
     command = "echo 'default context'"
-    functions = "functions"
-[[headers]]
-for = "/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/api/:splat"
