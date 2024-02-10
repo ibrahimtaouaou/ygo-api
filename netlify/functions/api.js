@@ -28,7 +28,7 @@ api.use(cors());
 // api.options(`*`, (req, res) => {
 //   res.status(200).send();
 // });
-app.use((req, res, next) => {
+api.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
   );
   next();
 
-  app.options("*", (res, req) => {
+  api.options("*", (res, req) => {
     res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
   });
 });
