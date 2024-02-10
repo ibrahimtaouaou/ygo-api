@@ -1,5 +1,9 @@
 [build]
     command = "echo 'default context'"
+[[headers]]
+for = "/*"
+  [headers.values]
+    access-control-allow-origin: *
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
