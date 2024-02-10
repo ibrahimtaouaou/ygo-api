@@ -15,7 +15,6 @@ const port = process.env.PORT || 3000;
 // Middleware
 api.use(bodyParser.json());
 api.options("*", cors());
-api.use(cors());
 api.use("/api/cards", cardsRouter);
 api.use("/api", homeRouter);
 
