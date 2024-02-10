@@ -13,10 +13,10 @@ const api = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-api.use(cors());
 api.use("/api/cards", cardsRouter);
 api.use("/api", homeRouter);
 api.use(bodyParser.json());
+api.use(cors());
 
 export const handler = serverless(api);
 
