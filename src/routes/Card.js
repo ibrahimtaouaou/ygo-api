@@ -24,10 +24,10 @@ function getType(cardInfo) {
     : "monster";
 }
 
-function getCardImage(id) {
+async function getCardImage(id) {
   // const cardsImageRef = storageRef(storage, `${type}/${id}.jpg`);
   // const url = await getDownloadURL(cardsImageRef);
-  const rawData = readFileSync("driveImageId.json");
+  const rawData = readFileSync("./src/jsonFiles/driveImageId.json");
   const data = JSON.parse(rawData);
   const urlID = data.find((link) => link.id === id).url;
 
@@ -59,7 +59,7 @@ function getCardImage(id) {
 
 router.get("/:id", async (req, res) => {
   try {
-    const rawData = readFileSync("card-misc.json");
+    const rawData = readFileSync("./src/jsonFiles/card-misc.json");
     const data = JSON.parse(rawData).data;
 
     const id = +req.params.id;
@@ -67,7 +67,7 @@ router.get("/:id", async (req, res) => {
 
     // const type = getType(cardInfo);
 
-    const cardImageURL = getCardImage(id);
+    const cardImageURL = await getCardImage(id);
     const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
 
@@ -81,7 +81,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/mostViewed/:num", async (req, res) => {
   try {
-    const rawData = readFileSync("mostViewedCard.json");
+    const rawData = readFileSync("./src/jsonFiles/mostViewedCard.json");
     const data = JSON.parse(rawData);
 
     const num = +req.params.num;
@@ -100,6 +100,7 @@ router.get("/mostViewed/:num", async (req, res) => {
     // { ...cardInfo, imageUrlStorage: cardImageURL };
     // const cardImageURL = await getCardImage(id);
     const message = `${num} cards have been found`;
+
     res.json(success(message, selectedCard));
   } catch (err) {
     console.error(err);
