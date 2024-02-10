@@ -15,8 +15,12 @@ const port = process.env.PORT || 3000;
 // Middleware
 api.use(bodyParser.json());
 api.use(cors());
+api.use((req, res, next) => {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  next();
+});
 api.use("/api/cards", cardsRouter);
-api.use("/api", homeRouter);
+api.use("/api/", homeRouter);
 
 export const handler = serverless(api);
 
