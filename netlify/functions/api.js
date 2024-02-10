@@ -15,11 +15,11 @@ const port = process.env.PORT || 3000;
 // Middleware
 api.use(bodyParser.json());
 api.use(cors());
-api.use("https://ygo-api.netlify.app/api/cards", cardsRouter);
-api.use("https://ygo-api.netlify.app/api", homeRouter);
+api.use("/api/cards", cardsRouter);
+api.use("/api", homeRouter);
 
 export const handler = serverless(api);
 
-// api.listen(port, () =>
-//   console.log(`Notre appli Node est démarré sur : http://localhost:${port}`)
-// );
+api.listen(port, () =>
+  console.log(`Notre appli Node est démarré sur : http://localhost:${port}`)
+);
