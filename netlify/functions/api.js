@@ -19,3 +19,7 @@ api.use("/api", homeRouter);
 api.use(bodyParser.json());
 
 export const handler = serverless(api);
+
+api.listen(port, () =>
+  console.log(`Notre appli Node est démarré sur : http://localhost:${port}`)
+);
