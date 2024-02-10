@@ -15,8 +15,8 @@ const port = process.env.PORT || 3000;
 // Middleware
 api.use(bodyParser.json());
 api.use(cors());
-api.use("/api/cards", cardsRouter);
-api.use("/api", homeRouter);
+api.use("https://ygo-api.netlify.app/api/cards", cardsRouter);
+api.use("https://ygo-api.netlify.app/api", homeRouter);
 
 export const handler = serverless(api);
 
