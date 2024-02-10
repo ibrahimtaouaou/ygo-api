@@ -103,6 +103,6 @@ router.get("/mostViewed/:num", async (req, res) => {
 
     res.json(success(message, selectedCard));
   } catch (err) {
-    console.error(err);
+    console.error(err, " 💥💥");
   }
 });
