@@ -60,7 +60,7 @@ async function getCardImage(id) {
 router.get("/:id", async (req, res) => {
   try {
     const rawData = readFileSync("../../public/card-misc.json");
-    const data = JSON.parse(rawData).data;
+    const data = await JSON.parse(rawData).data;
     res.json(success("message", data));
 
     // const id = +req.params.id;
