@@ -74,6 +74,7 @@ async function getCardImage(id) {
 // });
 
 router.get("/:id", async (req, res) => {
+  console.log("HEHEHEHEHE");
   try {
     let data;
     if (cardInfoCache.has("cardInfo")) data = cardInfoCache.get("cardInfo");
