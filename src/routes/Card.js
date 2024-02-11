@@ -58,22 +58,24 @@ async function getCardImage(id) {
 // });
 
 router.get("/:id", async (req, res) => {
-  // try {
-  //   const rawData = readFileSync("./src/jsonFiles/card-misc.json");
-  //   const data = JSON.parse(rawData).data;
-  //   const id = +req.params.id;
-  //   const cardInfo = data.find((card) => card.id === id);
-  //   // const type = getType(cardInfo);
-  //   const cardImageURL = await getCardImage(id);
-  //   const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
-  //   const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
-  //   res.json(success(message, selectedCard));
-  //   // const message = `${cardInfo.name} avec l'ID ${id} a bien été trouvé.}`;
-  //   // res.json(success(message, cardInfo));
-  // } catch (err) {
-  //   console.error(err);
-  // }
-  res.json("JSUIS LA");
+  try {
+    const rawData = readFileSync("./src/jsonFiles/card-misc.json");
+    const data = JSON.parse(rawData).data;
+    res.json(success("message", data));
+
+    // const id = +req.params.id;
+    // const cardInfo = data.find((card) => card.id === id);
+    // // const type = getType(cardInfo);
+    // const cardImageURL = await getCardImage(id);
+    // const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
+    // const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
+    // res.json(success(message, selectedCard));
+    // // const message = `${cardInfo.name} avec l'ID ${id} a bien été trouvé.}`;
+    // // res.json(success(message, cardInfo));
+  } catch (err) {
+    console.error(err);
+  }
+  // res.json("JSUIS LA");
 });
 
 router.get("/mostViewed/:num", async (req, res) => {
