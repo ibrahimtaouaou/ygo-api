@@ -59,7 +59,7 @@ async function getCardImage(id) {
 
 router.get("/:id", async (req, res) => {
   try {
-    const rawData = readFileSync("./src/jsonFiles/card-misc.json");
+    const rawData = readFileSync("./dist/jsonFiles/card-misc.json");
     const data = JSON.parse(rawData).data;
     res.json(success("message", data));
 
@@ -80,7 +80,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/mostViewed/:num", async (req, res) => {
   try {
-    const rawData = readFileSync("./src/jsonFiles/mostViewedCard.json");
+    const rawData = readFileSync("./dist/jsonFiles/mostViewedCard.json");
     const data = JSON.parse(rawData);
 
     const num = +req.params.num;
