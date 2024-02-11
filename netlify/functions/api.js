@@ -24,22 +24,11 @@ const headers = {
 
 // Middleware
 api.use(bodyParser.json());
-api.use(cors());
+api.use(cors({ origin: true }));
 // api.options(`*`, (req, res) => {
 //   res.status(200).send();
 // });
-api.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
 
-  api.options("*", (res, req) => {
-    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  });
-});
 // api.use((req, res, next) => {
 //   res.append("Access-Control-Allow-Origin", ["*"]);
 //   next();
