@@ -17,6 +17,7 @@ const MVC_ID = "1iM4S9EDwbJYzDZ00SK_iesBJ57D6pu_8";
 const DRIVE_IMG_ID = "1LkqtP1IMRq4N05qiXK_TmxDfhd0GAvfa";
 const YGO_ID = "1Nx1AQrvGNdwYiwy5zq7PXJNAvFC6bKvI";
 const TEST = "1V24NYrmt8-j8m8kp2vWEA9Kzx_FtGyvG";
+const LIGHT_CARD = "1wZ8BNdQGGdl-9_NCXczvdU0wOPolo9E3";
 const API_KEY = "AIzaSyCXhfo0Gzw8d7IJEMK6zWZ-E5Ou69qwgCM";
 
 // const cardsInfoRef = dbRef(db);
@@ -54,17 +55,27 @@ async function getCardImage(id) {
 }
 
 async function fetchUrl() {
-  if (cardInfoCache.has("data")) {
+  if (cardInfoCache.has("light_data")) {
     console.log("LOCAL DATA");
-    return cardInfoCache.get("data");
+    return cardInfoCache.get("light_data");
   } else {
     console.log("NEW DATA");
-    const url = await getDownloadURL(cardsInfoRef);
-    const response = await fetch(url);
-    const data = await response.json();
-    cardInfoCache.set("data", data);
+    const data = await downloadFile(LIGHT_CARD);
+    cardInfoCache.set("light_data", data);
     return data;
   }
+
+  // if (cardInfoCache.has("data")) {
+  //   console.log("LOCAL DATA");
+  //   return cardInfoCache.get("data");
+  // } else {
+  //   console.log("NEW DATA");
+  //   const url = await getDownloadURL(cardsInfoRef);
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   cardInfoCache.set("data", data);
+  //   return data;
+  // }
 }
 
 router.get("/:id", async (req, res) => {
