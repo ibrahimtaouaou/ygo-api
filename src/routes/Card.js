@@ -55,15 +55,18 @@ async function getCardImage(id) {
 }
 
 async function fetchUrl() {
-  if (cardInfoCache.has("light_data")) {
-    console.log("LOCAL DATA");
-    return cardInfoCache.get("light_data");
-  } else {
-    console.log("NEW DATA");
-    const data = await downloadFile(LIGHT_CARD);
-    cardInfoCache.set("light_data", data);
-    return data;
-  }
+  const rawData = readFileSync("./light-card-misc.json");
+  return JSON.parse(rawData);
+
+  // if (cardInfoCache.has("light_data")) {
+  //   console.log("LOCAL DATA");
+  //   return cardInfoCache.get("light_data");
+  // } else {
+  //   console.log("NEW DATA");
+  //   const data = await downloadFile(LIGHT_CARD);
+  //   cardInfoCache.set("light_data", data);
+  //   return data;
+  // }
 
   // if (cardInfoCache.has("data")) {
   //   console.log("LOCAL DATA");
