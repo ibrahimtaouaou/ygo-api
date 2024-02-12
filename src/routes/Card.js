@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ref as storageRef, getDownloadURL } from "firebase/storage";
-// import { ref as dbRef, get } from "@firebase/database";
+import { ref as dbRef, get } from "@firebase/database";
 import { storage, db } from "../config.js";
 import { success } from "../helper.js";
 import NodeCache from "node-cache";
