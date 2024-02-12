@@ -56,7 +56,7 @@ async function getCardImage(id) {
   return `https://lh3.googleusercontent.com/d/${urlID}`;
 }
 
-async function fetchUrl() {
+async function fetchUrl(key, file) {
   // const __filename = fileURLToPath(import.meta.url);
   // const __dirname = path.dirname(__filename);
   // const rawData = readFileSync(
@@ -64,13 +64,13 @@ async function fetchUrl() {
   // );
   // return JSON.parse(rawData);
 
-  if (cardInfoCache.has("light_data")) {
+  if (cardInfoCache.has(key)) {
     console.log("LOCAL DATA");
-    return cardInfoCache.get("light_data");
+    return cardInfoCache.get(key);
   } else {
     console.log("NEW DATA");
-    const data = await downloadFile(LIGHT_CARD);
-    cardInfoCache.set("light_data", data);
+    const data = await downloadFile(file);
+    cardInfoCache.set(key, data);
     return data;
   }
 
@@ -90,7 +90,7 @@ async function fetchUrl() {
 router.get("/:id", async (req, res) => {
   console.log("ON VA COMMENCER");
   try {
-    const data = await fetchUrl();
+    const data = await fetchUrl("light_data", LIGHT_CARD);
 
     // let data;
     // if (cardInfoCache.has("data")) {
@@ -162,16 +162,21 @@ router.get("/mostViewed/:num", async (req, res) => {
   try {
     // const rawData = readFileSync("./public/mostViewedCard.json");
     // const data = JSON.parse(rawData);
-    let data;
-    if (cardInfoCache.has("mostViewedCard"))
-      data = cardInfoCache.get("mostViewedCard");
-    else {
-      data = await downloadFile(MVC_ID);
-      cardInfoCache.set("mostViewedCard", data);
-    }
+    // let data;
+    // if (cardInfoCache.has("mostViewedCard"))
+    //   data = cardInfoCache.get("mostViewedCard");
+    // else {
+    //   data = await downloadFile(MVC_ID);
+    //   cardInfoCache.set("mostViewedCard", data);
+    // }
+    const data = await fetchUrl("light_data", LIGHT_CARD);
+
+    const newData = data.data
+      .map((card) => card)
+      .sort((a, b) => b.misc_info[0].views - a.misc_info[0].views);
 
     const num = +req.params.num;
-    const cardInfo = data.slice(0, num);
+    const cardInfo = newData.slice(0, num);
     const selectedCard = await Promise.all(
       cardInfo.map(async (card) => {
         const url = await getCardImage(card.id);
