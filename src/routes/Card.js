@@ -14,11 +14,12 @@ export const router = Router();
 const CARD_MISC_ID = "117U7NvNMWSrPqD_zKXa7zKhNA3PvOvdM";
 const MVC_ID = "1iM4S9EDwbJYzDZ00SK_iesBJ57D6pu_8";
 const DRIVE_IMG_ID = "1LkqtP1IMRq4N05qiXK_TmxDfhd0GAvfa";
-// const YGO_ID = "1Nx1AQrvGNdwYiwy5zq7PXJNAvFC6bKvI";
+const YGO_ID = "1Nx1AQrvGNdwYiwy5zq7PXJNAvFC6bKvI";
+const TEST = "1V24NYrmt8-j8m8kp2vWEA9Kzx_FtGyvG";
 const API_KEY = "AIzaSyCXhfo0Gzw8d7IJEMK6zWZ-E5Ou69qwgCM";
 
-// const cardsInfoRef = dbRef(db, `ygo/`);
-const cardInfoCache = new NodeCache({ stdTTL: 600 });
+const cardsInfoRef = dbRef(db, `/`);
+const cardInfoCache = new NodeCache({ stdTTL: 3600 });
 
 function getType(cardInfo) {
   return cardInfo.frameType === "spell"
@@ -50,58 +51,57 @@ async function getCardImage(id) {
   return `https://lh3.googleusercontent.com/d/${urlID}`;
 }
 
-// router.get("/:id", async (req, res) => {
-//   try {
-//     let data;
-//     if (cardInfoCache.has("data")) data = cardInfoCache.get("data");
-//     else {
-//       data = await get(cardsInfoRef);
-//       cardInfoCache.set("data", data);
-//     }
-
-//     const id = +req.params.id;
-//     const cardInfo = data.val().find((card) => card.id === id);
-
-//     const type = getType(cardInfo);
-
-//     const cardImageURL = await getCardImage(id, type);
-//     const selectedCard = { ...cardInfo, imageUrlStorage: cardImageURL };
-//     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrlStorage}`;
-//     res.json(success(message, selectedCard));
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
 router.get("/:id", async (req, res) => {
-  console.log("HEHEHEHEHE");
   try {
     let data;
-    if (cardInfoCache.has("cardInfo")) data = cardInfoCache.get("cardInfo");
+    if (cardInfoCache.has("data")) data = cardInfoCache.get("data");
     else {
-      data = (await downloadFile(CARD_MISC_ID)).data;
-      cardInfoCache.set("cardInfo", data);
+      data = await get(cardsInfoRef);
+      cardInfoCache.set("data", data);
     }
-    // const rawData = readFileSync("./card-misc.json");
-    // const data = await JSON.parse(rawData).data;
-    // res.json(success("message", data));
 
     const id = +req.params.id;
-    console.log("GOT THE ID");
-    const cardInfo = data.find((card) => card.id === id);
+    const cardInfo = data.val().find((card) => card.id === id);
+
     // const type = getType(cardInfo);
+
     const cardImageURL = await getCardImage(id);
-    console.log("GOT THE IMAGE ID");
     const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
     res.json(success(message, selectedCard));
-    // const message = `${cardInfo.name} avec l'ID ${id} a bien été trouvé.}`;
-    // res.json(success(message, cardInfo));
   } catch (err) {
     console.error(err);
   }
-  // res.json("JSUIS LA");
 });
+
+// router.get("/:id", async (req, res) => {
+//   try {
+//     let data;
+//     // if (cardInfoCache.has("cardInfo")) data = cardInfoCache.get("cardInfo");
+//     // else {
+//     data = await downloadFile(CARD_MISC_ID);
+//     cardInfoCache.set("cardInfo", data);
+//     // }
+//     // const rawData = readFileSync("./card-misc.json");
+//     // const data = await JSON.parse(rawData).data;
+//     // res.json(success("message", data));
+
+//     const id = +req.params.id;
+//     console.log("GOT THE ID");
+//     const cardInfo = data.find((card) => card.id === id);
+//     // const type = getType(cardInfo);
+//     const cardImageURL = await getCardImage(id);
+//     console.log("GOT THE IMAGE ID");
+//     const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
+//     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
+//     res.json(success(message, selectedCard));
+//     // const message = `${cardInfo.name} avec l'ID ${id} a bien été trouvé.}`;
+//     // res.json(success(message, cardInfo));
+//   } catch (err) {
+//     console.error(err);
+//   }
+//   // res.json("JSUIS LA");
+// });
 
 router.get("/mostViewed/:num", async (req, res) => {
   try {
@@ -152,8 +152,10 @@ async function downloadFile(realFileId) {
       fileId: fileId,
       alt: "media",
       key: API_KEY,
+      fields: "name",
     });
     console.log("FINISHED DL FROM GDRIVE");
+    console.log(file);
     return file.data;
   } catch (err) {
     console.error(err);
