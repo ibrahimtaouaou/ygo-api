@@ -22,7 +22,6 @@ const API_KEY = "AIzaSyCXhfo0Gzw8d7IJEMK6zWZ-E5Ou69qwgCM";
 // const cardsInfoRef = dbRef(db);
 const cardInfoCache = new NodeCache({ stdTTL: 3600 });
 const cardsInfoRef = storageRef(storage, `light-card-misc.json`);
-const url = await getDownloadURL(cardsInfoRef);
 
 function getType(cardInfo) {
   return cardInfo.frameType === "spell"
@@ -60,6 +59,7 @@ async function fetchUrl() {
     return cardInfoCache.get("data");
   } else {
     console.log("NEW DATA");
+    const url = await getDownloadURL(cardsInfoRef);
     const response = await fetch(url);
     const data = await response.json();
     cardInfoCache.set("data", data);
@@ -94,14 +94,13 @@ router.get("/:id", async (req, res) => {
     //   data = await get(cardsInfoRef);
     //   cardInfoCache.set("data", data);
     // }
-    console.log("pseudo root data ", data);
     const id = +req.params.id;
     const cardInfo = data.data.find((card) => card.id === id);
 
     // const type = getType(cardInfo);
 
-    // const cardImageURL = await getCardImage(id);
-    const cardImageURL = "";
+    // const cardImageURL = "";
+    const cardImageURL = await getCardImage(id);
     const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
     res.json(success(message, selectedCard));
@@ -191,7 +190,6 @@ async function downloadFile(realFileId) {
       fields: "name",
     });
     console.log("FINISHED DL FROM GDRIVE");
-    console.log(file);
     return file.data;
   } catch (err) {
     console.error(err);

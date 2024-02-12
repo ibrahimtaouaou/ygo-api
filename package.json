@@ -2,7 +2,7 @@
   "name": "ygo-api",
   "version": "1.0.0",
   "description": "",
-  "main": "./functions/app.js",
+  "main": "./netlify/functions/api.js",
   "type": "module",
   "scripts": {
     "start": "node ./netlify/functions/api.js",
