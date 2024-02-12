@@ -7,6 +7,7 @@ import NodeCache from "node-cache";
 import { google } from "googleapis";
 import fetch from "node-fetch";
 // import { GoogleAuth } from "google-auth-library";
+import path from "node:path";
 
 import { readFileSync } from "node:fs";
 
@@ -55,7 +56,9 @@ async function getCardImage(id) {
 }
 
 async function fetchUrl() {
-  const rawData = readFileSync("./light-card-misc.json");
+  const rawData = readFileSync(
+    path.resolve(__dirname, "./light-card-misc.json")
+  );
   return JSON.parse(rawData);
 
   // if (cardInfoCache.has("light_data")) {
