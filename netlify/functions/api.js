@@ -35,7 +35,7 @@ api.use(cors({ origin: true }));
 //   next();
 // });
 api.use("/api/cards", cardsRouter);
-api.use("/api/", homeRouter);
+api.use("/api", homeRouter);
 
 export const handler = serverless(api);
 

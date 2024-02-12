@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { ref as storageRef, getDownloadURL } from "firebase/storage";
-import { ref as dbRef, get } from "@firebase/database";
+import { ref as dbRef, onValue } from "@firebase/database";
 import { storage, db } from "../config.js";
 import { success } from "../helper.js";
 import NodeCache from "node-cache";
 import { google } from "googleapis";
+import fetch from "node-fetch";
 // import { GoogleAuth } from "google-auth-library";
 
 import { readFileSync } from "node:fs";
@@ -18,8 +19,10 @@ const YGO_ID = "1Nx1AQrvGNdwYiwy5zq7PXJNAvFC6bKvI";
 const TEST = "1V24NYrmt8-j8m8kp2vWEA9Kzx_FtGyvG";
 const API_KEY = "AIzaSyCXhfo0Gzw8d7IJEMK6zWZ-E5Ou69qwgCM";
 
-const cardsInfoRef = dbRef(db, `/`);
+// const cardsInfoRef = dbRef(db);
 const cardInfoCache = new NodeCache({ stdTTL: 3600 });
+const cardsInfoRef = storageRef(storage, `light-card-misc.json`);
+const url = await getDownloadURL(cardsInfoRef);
 
 function getType(cardInfo) {
   return cardInfo.frameType === "spell"
@@ -51,21 +54,54 @@ async function getCardImage(id) {
   return `https://lh3.googleusercontent.com/d/${urlID}`;
 }
 
-router.get("/:id", async (req, res) => {
-  try {
-    let data;
-    if (cardInfoCache.has("data")) data = cardInfoCache.get("data");
-    else {
-      data = await get(cardsInfoRef);
-      cardInfoCache.set("data", data);
-    }
+async function fetchUrl() {
+  if (cardInfoCache.has("data")) {
+    console.log("LOCAL DATA");
+    return cardInfoCache.get("data");
+  } else {
+    console.log("NEW DATA");
+    const response = await fetch(url);
+    const data = await response.json();
+    cardInfoCache.set("data", data);
+    return data;
+  }
+}
 
+router.get("/:id", async (req, res) => {
+  console.log("ON VA COMMENCER");
+  try {
+    const data = await fetchUrl();
+
+    // let data;
+    // if (cardInfoCache.has("data")) {
+    //   console.log("LOCAL DATA");
+    //   data = cardInfoCache.get("data");
+    // } else {
+    //   console.log("NEW DATA");
+    //   onValue(cardsInfoRef, async (snapshot) => {
+    //     data = await snapshot.val();
+    //     console.log(data, " HEHE");
+    //   });
+    //   cardInfoCache.set("data", data);
+    // }
+
+    // let data;
+    // if (cardInfoCache.has("data")) {
+    //   console.log("LOCAL DATA");
+    //   data = cardInfoCache.get("data");
+    // } else {
+    //   console.log("NEW DATA");
+    //   data = await get(cardsInfoRef);
+    //   cardInfoCache.set("data", data);
+    // }
+    console.log("pseudo root data ", data);
     const id = +req.params.id;
-    const cardInfo = data.val().find((card) => card.id === id);
+    const cardInfo = data.data.find((card) => card.id === id);
 
     // const type = getType(cardInfo);
 
-    const cardImageURL = await getCardImage(id);
+    // const cardImageURL = await getCardImage(id);
+    const cardImageURL = "";
     const selectedCard = { ...cardInfo, imageUrl: cardImageURL };
     const message = `${selectedCard.name} avec l'ID ${id} a bien été trouvé, et l'URL est ${selectedCard.imageUrl}`;
     res.json(success(message, selectedCard));
