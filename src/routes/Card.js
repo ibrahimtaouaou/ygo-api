@@ -20,7 +20,6 @@ const DRIVE_IMG_ID = "1LkqtP1IMRq4N05qiXK_TmxDfhd0GAvfa";
 const YGO_ID = "1Nx1AQrvGNdwYiwy5zq7PXJNAvFC6bKvI";
 const TEST = "1V24NYrmt8-j8m8kp2vWEA9Kzx_FtGyvG";
 const LIGHT_CARD = "1wZ8BNdQGGdl-9_NCXczvdU0wOPolo9E3";
-const API_KEY = "AIzaSyCXhfo0Gzw8d7IJEMK6zWZ-E5Ou69qwgCM";
 
 // const cardsInfoRef = dbRef(db);
 const cardInfoCache = new NodeCache({ stdTTL: 3600 });
